@@ -29,6 +29,8 @@ class BayesNet:
         # add edges
         [self.add_edge(e) for e in edges]
 
+        self.edges = edges
+
         # check for cycles
         if not nx.is_directed_acyclic_graph(self.structure):
             raise Exception('The provided graph is not acyclic.')
@@ -120,7 +122,7 @@ class BayesNet:
         :return: The interaction graph based on the factors of the current BN.
         """
         # Create the graph and add all variables
-        int_graph = nx.Graph()
+        int_graph = nx.DiGraph()
         [int_graph.add_node(var) for var in self.get_all_variables()]
 
         # connect all variables with an edge which are mentioned in a CPT together
@@ -226,3 +228,6 @@ class BayesNet:
         :param edge: Edge to be deleted (e.g. ('A', 'B')).
         """
         self.structure.remove_edge(edge[0], edge[1])
+
+    def get_number_of_edges(self):
+        return self.structure.number_of_edges()
