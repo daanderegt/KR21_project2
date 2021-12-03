@@ -26,8 +26,7 @@ class BNReasoner:
     # TODO: This is where your methods should go
 
     def dsep(self,independent1,independent2,given3):
-        G = self.bn.get_interaction_graph()
-        d_seperated=nx.d_separated(G,independent1,independent2,given3)
+        d_seperated=nx.algorithms.d_separated(self.bn.structure,{independent1},{independent2},{given3})
         return d_seperated
 
     def MinDegreeOrder(self):
@@ -58,6 +57,7 @@ class BNReasoner:
 
 
 bn = BNReasoner('testing/lecture_example.BIFXML')
-#print(bn.dsep('Winter?','Slippery Road?','Sprinkler?'))
+print(bn.dsep('Winter?','Slippery Road?','Sprinkler?'))
 print(bn.MinDegreeOrder())
 print(bn.MinFillOrder())
+

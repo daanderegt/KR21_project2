@@ -231,3 +231,4 @@ class BayesNet:
 
     def get_number_of_edges(self):
         return self.structure.number_of_edges()
+
