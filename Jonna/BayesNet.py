@@ -122,7 +122,7 @@ class BayesNet:
         :return: The interaction graph based on the factors of the current BN.
         """
         # Create the graph and add all variables
-        int_graph = nx.DiGraph()
+        int_graph = nx.Graph()
         [int_graph.add_node(var) for var in self.get_all_variables()]
 
         # connect all variables with an edge which are mentioned in a CPT together
@@ -231,3 +231,13 @@ class BayesNet:
 
     def get_number_of_edges(self):
         return self.structure.number_of_edges()
+    
+    def has_edge(self, u, v):
+        return self.structure.has_edge(u, v)
+
+    def returnp(self,cpt,column,bool):
+
+        mask = cpt[column] == bool
+
+        return cpt[mask]['p']
+
