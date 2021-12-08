@@ -32,18 +32,18 @@ class BNReasonerChantal:
         d_seperated=nx.d_separated(G,independent1,independent2,given3)
         return d_seperated
 
-    def MinDegreeOrder(self):
+    def MinDegreeOrder(self, variables):
         G = self.bn.get_interaction_graph()
         degrees = {}
-        for i in self.variables:
+        for i in variables:
             degrees[i]=G.degree(i)
         sorted_degrees=dict(sorted(degrees.items(), key=lambda item: item[1]))
         return sorted_degrees
 
-    def MinFillOrder(self):
+    def MinFillOrder(self, variables):
         degrees = {}
         print()
-        for i in self.variables:
+        for i in variables:
             degrees[i]=self.check_edges_del_var(i)
         sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1],reverse=True))
         return sorted_degrees
@@ -120,7 +120,7 @@ class BNReasonerChantal:
 bn = BNReasonerChantal('testing/lecture_example.BIFXML')
 
 # print(bn.dsep('Winter?','Slippery Road?','Sprinkler?'))
-# print(bn.MinDegreeOrder())
-# print(bn.MinFillOrder())
+print(bn.MinDegreeOrder())
+print(bn.MinFillOrder())
 
 print(bn.node_pruning('Wet Grass?', [('Winter?', True), ('Rain?', False)]))
