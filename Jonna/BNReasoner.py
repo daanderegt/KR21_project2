@@ -104,12 +104,21 @@ class BNReasoner:
         var1 = factor1.columns[-2]
         var2 = factor2.columns[-2]
 
+        F2F1 = deepcopy(factor2)
 
+        for i in range(0, len(factor1[var1])):
+            if factor1[var1].values[i] == True:
+                True_p = factor1['p'][i]
+            if factor1[var1].values[i] == False:
+                False_p = factor1['p'][i]
 
+        for i in range(0, len(factor2[var1])):
+            if factor2[var1].values[i] == True:
+                F2F1.at[i, 'p'] = factor2['p'][i] * False_p
+            if factor2[var1].values[i] == False:
+                F2F1.at[i, 'p'] = factor2['p'][i] * False_p
 
-
-
-        return "done"
+        return F2F1
 
        
     def summing_out(self, params):
@@ -123,35 +132,28 @@ bayes = BNReasoner('Jonna/testing/lecture_example.BIFXML')
 # print(bayes.d_sep('Slippery Road?', 'Winter?', ['Rain?', 'Wet Grass?']))
 
 cpts = bayes.bn.get_all_cpts()
-# print(bayes.multiply(cpts["Winter?"], cpts["Sprinkler?"]))
+print(bayes.multiply(cpts["Winter?"], cpts["Sprinkler?"]))
 
-factor1 = cpts["Winter?"]
-factor2 = cpts["Sprinkler?"]
-var1 = factor1.columns[-2]
-var2 = factor2.columns[-2]
+# factor1 = cpts["Winter?"]
+# factor2 = cpts["Sprinkler?"]
+# var1 = factor1.columns[-2]
+# var2 = factor2.columns[-2]
 
-True_loc = []
-False_loc = []
+# F2F1 = deepcopy(factor2)
 
+# for i in range(0, len(factor1[var1])):
+#     if factor1[var1].values[i] == True:
+#         True_p = factor1['p'][i]
+#     if factor1[var1].values[i] == False:
+#         False_p = factor1['p'][i]
 
+# for i in range(0, len(factor2[var1])):
+#     if factor2[var1].values[i] == True:
+#         F2F1.at[i, 'p'] = factor2['p'][i] * False_p
+#     if factor2[var1].values[i] == False:
+#         F2F1.at[i, 'p'] = factor2['p'][i] * False_p
 
-F2F1 = deepcopy(factor2)
-
-
-
-for i in range(0, len(factor1[var1])):
-    if factor1[var1].values[i] == True:
-        True_p = factor1['p'][i]
-    if factor1[var1].values[i] == False:
-        False_p = factor1['p'][i]
-
-for i in range(0, len(factor2[var1])):
-    if factor2[var1].values[i] == True:
-        F2F1.at[i, 'p'] = factor2['p'][i] * False_p
-    if factor2[var1].values[i] == False:
-        F2F1.at[i, 'p'] = factor2['p'][i] * False_p
-
-print(factor2)
-print(F2F1)
+# print(factor2)
+# print(F2F1)
 
 #print(factor1[var1])
