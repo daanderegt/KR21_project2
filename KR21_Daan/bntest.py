@@ -70,11 +70,23 @@ class BNReasoner:
         cpt1 = cpt1.drop(['p_x','p_y'],axis=1)
         return cpt1
 
-    def marginal_distribution(self,variables):
-        cpts =[]
+    def marginal_distribution(self,variables,evidence):
+        for e in evidence:
+            variable = e
+            value = evidence[e]
+            cpt = self.updating_cpt(variable,value)
+            self.bn.update_cpt(variable,cpt)
+        print(self.bn.get_all_cpts())
+        cpts = []
         for i in variables:
-            cpts.append(self.bn.get_cpt(i))
-        self.variable_elimination(cpts)
+            cpt = self.bn.get_cpt(i)
+            cpts.append(self.variable_elimination(cpt))
+        cpt1 = cpts[0]
+        cpt2 = cpts[1]
+        cpt1 = cpt1.merge(cpt2)
+        cpt1['p'] = cpt1['p_x'] * cpt1['p_y']
+        cpt1 = cpt1.drop(['p_x', 'p_y'], axis=1)
+        return cpts
 
     def variable_elimination(self,cpt):
 
@@ -107,7 +119,23 @@ class BNReasoner:
         cpt.reset_index(inplace=True)
         return cpt
 
-
+    def updating_cpt(self,variable,value):
+        cpt = self.bn.get_cpt(variable)
+        j = 0
+        # cpt = cpt.drop('p',axis=1)
+        for i in cpt[variable]:
+            if value:
+                if i:
+                    cpt['p'][j] = 1
+                else:
+                    cpt['p'][j] = 0
+            else:
+                if i:
+                    cpt['p'][j] = 0
+                else:
+                    cpt['p'][j] = 1
+            j += 1
+        return cpt
 
 
 
@@ -120,6 +148,9 @@ bayes = BNReasoner('testing/lecture_example.BIFXML')
 
 
 # print(bayes.marginal_distribution(['Wet Grass?']))
-cpt=bayes.variable_elimination(bayes.bn.get_cpt('Wet Grass?'))
+cpt=bayes.marginal_distribution(['Wet Grass?','Slippery Road?'], {'Winter?': True, 'Sprinkler?': True, 'Rain?': True})
 print(cpt)
 #print(bayes.grotetabel())
+
+
+# print(bayes.updating_cpt('Wet Grass?', True))
