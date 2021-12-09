@@ -48,7 +48,7 @@
 
     Sprinkler?  Rain?  Wet Grass?     p
 0       False  False       False  1.00
-1       False  False        True  0.00
+1       False  False        Truecpt  0.00
 2       False   True       False  0.20
 3       False   True        True  0.80
 4        True  False       False  0.10

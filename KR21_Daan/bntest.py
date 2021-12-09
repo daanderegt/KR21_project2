@@ -70,12 +70,42 @@ class BNReasoner:
         cpt1 = cpt1.drop(['p_x','p_y'],axis=1)
         return cpt1
 
+    def marginal_distribution(self,variables):
+        for variable in variables:
+            cpt = self.bn.get_cpt(variable)
+            for i in cpt.columns[:-2]:
+                if not i:
+                    return 'Tabel'
+                else:
+                    cpt_next = self.bn.get_cpt(i)
+                    cpt = self.multiply_cpt(cpt, cpt_next)
 
-    def grotetabel(self):
-        cpt = bayes.bn.get_cpt('Winter?')
-        for i in self.variables[1:]:
+
+
+    def J_P_D(self, variables):
+        cpt = bayes.bn.get_cpt(variables[1])
+        for i in variables[1:]:
             cpt = bayes.multiply_cpt(cpt, bayes.bn.get_cpt(i))
         return cpt
+
+    def summing_out(self, cpt , variable):
+
+        return 'iets'
+
+
+    def variable_elimination(self,variable):
+        #get all cpts that mention variable
+        variables=[]
+        for i in self.variables:
+            cpt=self.bn.get_cpt(i)
+            if variable in cpt.columns:
+                variables.append(cpt.columns[-2])
+
+        #get Joint probability distrubution of these variables
+        jpd = self.J_P_D(variables)
+        self.summing_out(jpd,variable)
+
+
 
 
 
@@ -89,5 +119,5 @@ bayes = BNReasoner('testing/lecture_example.BIFXML')
 # print(bayes.MinFillOrder())
 
 
-
-print(bayes.grotetabel())
+print(bayes.marginal_distribution(['Wet Grass?']))
+#print(bayes.grotetabel())
