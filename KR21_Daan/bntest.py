@@ -71,15 +71,20 @@ class BNReasoner:
         return cpt1
 
     def marginal_distribution(self,variables):
-        for variable in variables:
-            cpt = self.bn.get_cpt(variable)
-            for i in cpt.columns[:-2]:
-                if not i:
-                    return 'Tabel'
-                else:
-                    cpt_next = self.bn.get_cpt(i)
-                    cpt = self.multiply_cpt(cpt, cpt_next)
+        cpts =[]
+        for i in variables:
+            cpts.append(self.bn.get_cpt(i))
+        self.variable_elimination(cpts)
 
+    def variable_elimination(self,cpt):
+
+        for i in cpt.columns[:-2]:
+            cpt_next = self.bn.get_cpt(i)
+            cpt = self.multiply_cpt(cpt_next, cpt)
+            cpt = self.summing_out(cpt,i)
+            if cpt_next.columns[:-2].empty:
+                return cpt
+        return self.variable_elimination(cpt)
 
 
     def J_P_D(self, variables):
@@ -89,23 +94,18 @@ class BNReasoner:
         return cpt
 
     def summing_out(self, cpt , variable):
+        #als andere variabellen gelijk zijn in cpt moeten deze vermenigvuldigd worden
+        cpt = cpt.drop([variable],axis=1)
+        variables_left = [var for var in cpt.columns if var != variable and var != 'p']
+        #for i in variables_left:
 
-        return 'iets'
+        # for index, row in cpt.itercolumns():
+        #     if row[variables_left] ==
+        # for i in cpt[variables_left]:
 
-
-    def variable_elimination(self,variable):
-        #get all cpts that mention variable
-        variables=[]
-        for i in self.variables:
-            cpt=self.bn.get_cpt(i)
-            if variable in cpt.columns:
-                variables.append(cpt.columns[-2])
-
-        #get Joint probability distrubution of these variables
-        jpd = self.J_P_D(variables)
-        self.summing_out(jpd,variable)
-
-
+        cpt = cpt.groupby(variables_left).agg({'p': 'sum'})
+        cpt.reset_index(inplace=True)
+        return cpt
 
 
 
@@ -119,5 +119,7 @@ bayes = BNReasoner('testing/lecture_example.BIFXML')
 # print(bayes.MinFillOrder())
 
 
-print(bayes.marginal_distribution(['Wet Grass?']))
+# print(bayes.marginal_distribution(['Wet Grass?']))
+cpt=bayes.variable_elimination(bayes.bn.get_cpt('Wet Grass?'))
+print(cpt)
 #print(bayes.grotetabel())
