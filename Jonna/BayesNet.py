@@ -116,6 +116,25 @@ class BayesNet:
 
         return cpts
 
+    def get_digraph(self):
+        """
+        Returns a networkx.Graph as interaction graph of the current BN.
+        :return: The interaction graph based on the factors of the current BN.
+        """
+        # Create the graph and add all variables
+        int_graph = nx.DiGraph()
+        [int_graph.add_node(var) for var in self.get_all_variables()]
+
+        # connect all variables with an edge which are mentioned in a CPT together
+        for var in self.get_all_variables():
+            involved_vars = list(self.get_cpt(var).columns)[:-1]
+            for i in range(len(involved_vars)-1):
+                for j in range(i+1, len(involved_vars)):
+                    if not int_graph.has_edge(involved_vars[i], involved_vars[j]):
+                        int_graph.add_edge(involved_vars[i], involved_vars[j])
+        return int_graph
+
+
     def get_interaction_graph(self):
         """
         Returns a networkx.Graph as interaction graph of the current BN.
