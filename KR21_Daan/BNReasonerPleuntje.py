@@ -172,7 +172,7 @@ class BNReasoner:
                 for index2, row2 in cpt_next.iterrows():
 
                     if row[variable] == row2[variable]:
-                        data['p'].appenvcbAd(row['p'] * row2['p'])
+                        data['p'].append(row['p'] * row2['p'])
                         data[variable].append(row[variable])
 
                         # if row[variable] not in data or row2[variable] not in data:

@@ -35,15 +35,32 @@ class BNReasoner:
             print(True)
             return True
 
-    def dsep(self,independent1,independent2,given3): # To verify if our own method gives the same answer
+    def d_sep_networkx(self,independent1,independent2,given3): # To verify if our own method gives the same answer
         d_seperated=nx.algorithms.d_separated(self.bn.structure,{independent1},{independent2},{given3})
         return d_seperated
 
-    ''' Add MinDegreeOrder '''
+    def MinDegreeOrder(self,variables):
+        G = self.bn.get_interaction_graph()
+        degrees = {}
+        for i in variables:
+            degrees[i] = G.degree(i)
+        sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1]))
+        return sorted_degrees.keys()
 
-    ''' Add MinFillOrder '''
+    def MinFillOrder(self, variables):
+        degrees = {}
+        for i in variables:
+            degrees[i] = self.check_edges_del_var(i)
+        sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1], reverse=True))
+        return sorted_degrees.keys()
 
-    ''' Add check_edges_del_var '''
+    def check_edges_del_var(self, var):
+        bay = BayesNet()
+        # Loads the BN from an BIFXML file
+        bay.load_from_bifxml(self.net)
+        bay.del_var(var)
+        edges = bay.get_number_of_edges()
+        return edges
 
     def node_pruning(self, Q_variables, E_evidence):
         G = self.bn.get_digraph()
@@ -52,13 +69,14 @@ class BNReasoner:
                 self.bn.del_var(i)
 
         self.bn.draw_structure()
-        for evidence in E_evidence:
-            self.edge_pruning(evidence)
 
-    def edge_pruning(self, given_evidence):
-        evidence = given_evidence[0]
-        booleanvalue = given_evidence[1]
+        if E_evidence:
+            for e in E_evidence:
+                evidence = e
+                booleanvalue = E_evidence[e]
+                self.edge_pruning(evidence, booleanvalue)
 
+    def edge_pruning(self, evidence, booleanvalue):
         G = self.bn.get_digraph()
 
         for i in self.bn.get_all_variables():
@@ -88,17 +106,123 @@ class BNReasoner:
             del df[evidence]
             print("Modified CPT's: ", df)
 
-    ''' Marginal distributions '''
+    ''' Marginal distribution '''
+
+
+    def multiply_cpt(self,cpt1, cpt2):
+        cpt1_list=list(cpt1.columns)
+        cpt2_list = list(cpt2.columns)
+        common_vars = [var for var in cpt1_list if var in cpt2_list and var != 'p']
+        if not common_vars:
+            return 'Multiplication is not possible because there are no common variables in the given CPTs'
+
+        cpt1 = cpt1.merge(cpt2,left_on=common_vars,right_on=common_vars)
+        cpt1['p']= cpt1['p_x']*cpt1['p_y']
+        cpt1 = cpt1.drop(['p_x','p_y'],axis=1)
+        return cpt1
+
+    def summing_out(self, cpt , variable):
+        #als andere variabellen gelijk zijn in cpt moeten deze vermenigvuldigd worden
+        cpt = cpt.drop([variable],axis=1)
+        variables_left = [var for var in cpt.columns if var != variable and var != 'p']
+        cpt = cpt.groupby(variables_left).agg({'p': 'sum'})
+        cpt.reset_index(inplace=True)
+        return cpt
+
+    def variable_elimination(self,cpt):
+        order = self.MinFillOrder(cpt.columns[:-2])
+        length = len(cpt.columns)
+        if length == 2:
+            return cpt
+        order1 = cpt.columns[:-2]
+        for i in order1:
+            cpt_next = self.bn.get_cpt(i)
+            cpt = self.multiply_cpt(cpt_next, cpt)
+            print(cpt)
+            cpt = self.summing_out(cpt,i)
+
+        return self.variable_elimination(cpt)
+
+    def updating_cpt(self,variable,value):
+        cpt = self.bn.get_cpt(variable)
+        j = 0
+        for i in cpt[variable]:
+            if value:
+                if i:
+                    cpt['p'][j] = 1
+                else:
+                    cpt['p'][j] = 0
+            else:
+                if i:
+                    cpt['p'][j] = 0
+                else:
+                    cpt['p'][j] = 1
+            j += 1
+        print('cpt=',variable,cpt)
+        return cpt
+
+    def marginal_distribution(self,variables,evidence):
+        if evidence:
+            for e in evidence:
+                variable = e
+                value = evidence[e]
+                cpt = self.updating_cpt(variable,value)
+                self.bn.update_cpt(variable,cpt)
+        cpts = []
+        for i in variables:
+            cpt = self.bn.get_cpt(i)
+            cpts.append(self.variable_elimination(cpt))
+
+        cpt1 = cpts[0]
+        for i in cpts[1:]:
+            Data = {}
+            cpt2 = i
+            for i in cpt1:
+                if i != 'p':
+                    Data.update({i: []})
+            for j in cpt2:
+                if j != 'p':
+                    Data.update({j: []})
+            Data.update({'p':[]})
+            for index, row in cpt1.iterrows():
+                for index2, row2 in cpt2.iterrows():
+                    for i in Data.keys():
+                        if i != 'p':
+                            if i in cpt1:
+                                Data[i].append(row[i])
+                            if i in cpt2:
+                                Data[i].append(row2[i])
+                        else:
+                            Data['p'].append(row['p'] * row2['p'])
+            cpt1 = pd.DataFrame(Data)
+        return cpt1
+
 
     ''' MAP '''
 
+    def MAP(self, variables, evidence):
+        cpt = self.marginal_distribution(variables,evidence)
+        max = cpt['p'].max()
+        maxrow=cpt.loc[cpt['p']==max]
+        return maxrow
+
     ''' MPE '''
+
+    def MPE(self,variables,evidence):
+        evidence = {}
+        maxrow = self.MAP(variables,evidence)
+        return maxrow
 
 
 # !! self.bn.get_interaction_graph() = self.bn.get_digraph()
 
 if __name__ == "__main__":
-    bayes = BNReasoner('Jonna/testing/b500-31.xml')
+    bayes = BNReasoner('testing/corona_example.BIFXML')
+    #bayes = BNReasoner('testing/b500-31.xml')
     #bayes.node_pruning('node100', [('node203', True), ('node333', False), ('node1', False), ('node33', False), ('node400', False)])
     #bayes.d_sep('node5', 'node30', ['node22', 'node2'])
+    print(bayes.marginal_distribution(['Corona?'], {'Obesitas?': True}))
+    #print (bayes.marginal_distribution(['node22'],{'node333': False}))
+    #print(bayes.node_pruning(['node22'],{'node333': False}))
+
 
