@@ -1,6 +1,9 @@
 from copy import deepcopy
 import itertools
 from typing import Union
+
+import networkx
+
 from BayesNet import BayesNet
 import networkx as nx
 import pandas as pd
@@ -39,17 +42,40 @@ class BNReasoner:
         d_seperated=nx.algorithms.d_separated(self.bn.structure,{independent1},{independent2},{given3})
         return d_seperated
 
-    def MinDegreeOrder(self,variables):
-        G = self.bn.get_interaction_graph()
+    def MinDegreeOrder(self, variables, order):
+        G = self.bn.structure.to_undirected()
         degrees = {}
-        for i in variables:
-            degrees[i] = G.degree(i)
-        sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1]))
-        return sorted_degrees.keys()
+        all_combinations = []
+        neighbors = []
+        for variable in variables:
+            degrees[variable] = len(list(nx.neighbors(G, variable)))
 
-    def MinFillOrder(self, variables):
+        least_edges = min(degrees, key=degrees.get)
+        for i in nx.neighbors(G, least_edges):
+            neighbors.append(i)
+
+        for i in range(len(list(neighbors)) + 1):
+            neighbors_iterated = itertools.combinations(neighbors, i)
+            combinations_list = list(neighbors_iterated)
+            all_combinations += combinations_list
+
+        neighbors = [i for i in all_combinations if len(i) == 2]
+        for neighbor in neighbors:
+            self.bn.add_edge(neighbor)
+            print(neighbor)
+        order.append(least_edges)
+        self.bn.del_var(least_edges)
+        variables = self.bn.get_all_variables()
+        self.bn.draw_structure()
+
+        if len(variables) == 0:
+            return order
+        else:
+            return self.MinDegreeOrderr(variables, order)
+
+    def MinFillOrder(self):
         degrees = {}
-        for i in variables:
+        for i in self.variables:
             degrees[i] = self.check_edges_del_var(i)
         sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1], reverse=True))
         return sorted_degrees.keys()
@@ -107,8 +133,6 @@ class BNReasoner:
             print("Modified CPT's: ", df)
 
     ''' Marginal distribution '''
-
-
     def multiply_cpt(self,cpt1, cpt2):
         cpt1_list=list(cpt1.columns)
         cpt2_list = list(cpt2.columns)
@@ -122,7 +146,7 @@ class BNReasoner:
         return cpt1
 
     def summing_out(self, cpt , variable):
-        #als andere variabellen gelijk zijn in cpt moeten deze vermenigvuldigd worden
+        #als andere variabelen gelijk zijn in cpt moeten deze vermenigvuldigd worden
         cpt = cpt.drop([variable],axis=1)
         variables_left = [var for var in cpt.columns if var != variable and var != 'p']
         cpt = cpt.groupby(variables_left).agg({'p': 'sum'})
@@ -217,12 +241,15 @@ class BNReasoner:
 # !! self.bn.get_interaction_graph() = self.bn.get_digraph()
 
 if __name__ == "__main__":
-    bayes = BNReasoner('testing/corona_example.BIFXML')
+    bayes = BNReasoner('testing/lecture_example.BIFXML')
     #bayes = BNReasoner('testing/b500-31.xml')
     #bayes.node_pruning('node100', [('node203', True), ('node333', False), ('node1', False), ('node33', False), ('node400', False)])
     #bayes.d_sep('node5', 'node30', ['node22', 'node2'])
-    print(bayes.marginal_distribution(['Corona?'], {'Obesitas?': True}))
+    #print(bayes.marginal_distribution(['Corona?'], {'Obesitas?': True}))
     #print (bayes.marginal_distribution(['node22'],{'node333': False}))
     #print(bayes.node_pruning(['node22'],{'node333': False}))
 
+    print(bayes.MinDegreeOrder(bayes.bn.get_all_variables(), []))
+
+    # print(bayes.MinFillOrder())
 

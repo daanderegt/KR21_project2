@@ -230,9 +230,9 @@ class BayesNet:
             self.structure.add_edge(edge[0], edge[1])
 
         # check for cycles
-        if not nx.is_directed_acyclic_graph(self.structure):
-            self.structure.remove_edge(edge[0], edge[1])
-            raise ValueError('Edge would make graph cyclic.')
+        # if not nx.is_directed_acyclic_graph(self.structure):
+        #     self.structure.remove_edge(edge[0], edge[1])
+        #     raise ValueError('Edge would make graph cyclic.')
 
     def del_var(self, variable: str) -> None:
         """
@@ -259,4 +259,3 @@ class BayesNet:
         mask = cpt[column] == bool
 
         return cpt[mask]['p']
-
