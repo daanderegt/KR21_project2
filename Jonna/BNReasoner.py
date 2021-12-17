@@ -71,7 +71,7 @@ class BNReasoner:
         if len(variables) == 0:
             return order
         else:
-            return self.MinDegreeOrderr(variables, order)
+            return self.MinDegreeOrder(variables, order)
 
     def MinFillOrder(self):
         degrees = {}
@@ -79,6 +79,46 @@ class BNReasoner:
             degrees[i] = self.check_edges_del_var(i)
         sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1], reverse=True))
         return sorted_degrees.keys()
+
+    def MinFillOrderr(self, variables, order):
+        G = self.bn.structure.to_undirected()
+        fill = {}
+        for variable in variables:
+            length=len(self.getneighborsedges(variable))
+            fill[variable]=length
+
+        sorted_degrees = dict(sorted(fill.items(), key=lambda item: item[1]))
+        max=list(sorted_degrees.keys())[0]
+        order.append(max)
+        self.del_variable(G,max)
+        variables = self.bn.get_all_variables()
+        if len(variables) == 0:
+            return order
+        else:
+            return self.MinFillOrderr(variables, order)
+
+
+
+    def getneighborsedges(self,node):
+        G = self.bn.structure.to_undirected()
+
+        neighbors=[]
+        all_combinations=[]
+        for i in nx.neighbors(G, node):
+            neighbors.append(i)
+
+        for i in range(len(list(neighbors)) + 1):
+            neighbors_iterated = itertools.combinations(neighbors, i)
+            combinations_list = list(neighbors_iterated)
+            all_combinations += combinations_list
+        neighbors = [i for i in all_combinations if len(i) == 2]
+        return neighbors
+
+    def del_variable(self,G,variable):
+        edges=self.getneighborsedges(variable)
+        for edge in edges:
+            self.bn.add_edge(edge)
+        self.bn.del_var(variable)
 
     def check_edges_del_var(self, var):
         bay = BayesNet()
@@ -241,7 +281,7 @@ class BNReasoner:
 # !! self.bn.get_interaction_graph() = self.bn.get_digraph()
 
 if __name__ == "__main__":
-    bayes = BNReasoner('testing/lecture_example.BIFXML')
+    bayes = BNReasoner('testing/corona_example.BIFXML')
     #bayes = BNReasoner('testing/b500-31.xml')
     #bayes.node_pruning('node100', [('node203', True), ('node333', False), ('node1', False), ('node33', False), ('node400', False)])
     #bayes.d_sep('node5', 'node30', ['node22', 'node2'])
@@ -249,7 +289,8 @@ if __name__ == "__main__":
     #print (bayes.marginal_distribution(['node22'],{'node333': False}))
     #print(bayes.node_pruning(['node22'],{'node333': False}))
 
-    print(bayes.MinDegreeOrder(bayes.bn.get_all_variables(), []))
-
+    # print(bayes.MinDegreeOrder(bayes.bn.get_all_variables(), []))
+    #bayes.del_variable(bayes.bn.structure.to_undirected(),'Winter?')
+    print(bayes.MinFillOrderr(bayes.variables,[]))
     # print(bayes.MinFillOrder())
 

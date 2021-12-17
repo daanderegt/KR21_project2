@@ -224,9 +224,7 @@ class BayesNet:
         :param edge: Tuple of the directed edge to be added (e.g. ('A', 'B')).
         :raises Exception: If added edge introduces a cycle in the structure.
         """
-        if edge in self.structure.edges:
-            raise Exception('Edge already exists.')
-        else:
+        if not edge in self.structure.edges:
             self.structure.add_edge(edge[0], edge[1])
 
         # check for cycles
