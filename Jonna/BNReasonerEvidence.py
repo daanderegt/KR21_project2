@@ -1,7 +1,7 @@
 from copy import deepcopy
 import itertools
 from typing import Union
-
+import time
 import numpy as np
 
 from BayesNet import BayesNet
@@ -42,20 +42,77 @@ class BNReasoner:
         d_seperated=nx.algorithms.d_separated(self.bn.structure,{independent1},{independent2},{given3})
         return d_seperated
 
-    def MinDegreeOrder(self,variables):
-        G = self.bn.get_interaction_graph()
+    def MinDegreeOrder(self, variables, order):
+        G = self.bn.structure.to_undirected()
         degrees = {}
-        for i in variables:
-            degrees[i] = G.degree(i)
-        sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1]))
-        return sorted_degrees.keys()
+        all_combinations = []
+        neighbors = []
+        for variable in variables:
+            degrees[variable] = len(list(nx.neighbors(G, variable)))
 
-    def MinFillOrder(self, variables):
-        degrees = {}
-        for i in variables:
-            degrees[i] = self.check_edges_del_var(i)
-        sorted_degrees = dict(sorted(degrees.items(), key=lambda item: item[1], reverse=True))
-        return sorted_degrees.keys()
+        least_edges = min(degrees, key=degrees.get)
+        for i in nx.neighbors(G, least_edges):
+            neighbors.append(i)
+
+        for i in range(len(list(neighbors)) + 1):
+            neighbors_iterated = itertools.combinations(neighbors, i)
+            combinations_list = list(neighbors_iterated)
+            all_combinations += combinations_list
+
+        neighbors = [i for i in all_combinations if len(i) == 2]
+        for neighbor in neighbors:
+            self.bn.add_edge(neighbor)
+        order.append(least_edges)
+        self.bn.del_var(least_edges)
+
+        variables = list(variables)
+        variables.remove(least_edges)
+
+        if len(variables) == 0:
+            return order
+        else:
+            return self.MinDegreeOrder(variables, order)
+
+    def MinFillOrder(self, variables, order,bn):
+        G = bn.structure.to_undirected()
+        fill = {}
+        for variable in variables:
+            length=len(self.getneighborsedges(variable,bn))
+            fill[variable]=length
+
+        sorted_degrees = dict(sorted(fill.items(), key=lambda item: item[1]))
+        max=list(sorted_degrees.keys())[0]
+        order.append(max)
+        self.del_variable(G,max,bn)
+        variables = list(variables)
+        variables.remove(max)
+        if len(variables) == 0:
+            return order
+        else:
+            return self.MinFillOrder(variables, order,bn)
+
+
+
+    def getneighborsedges(self,node,bn):
+        G = bn.structure.to_undirected()
+
+        neighbors=[]
+        all_combinations=[]
+        for i in nx.neighbors(G, node):
+            neighbors.append(i)
+
+        for i in range(len(list(neighbors)) + 1):
+            neighbors_iterated = itertools.combinations(neighbors, i)
+            combinations_list = list(neighbors_iterated)
+            all_combinations += combinations_list
+        neighbors = [i for i in all_combinations if len(i) == 2]
+        return neighbors
+
+    def del_variable(self,G,variable,bn):
+        edges=self.getneighborsedges(variable,bn)
+        for edge in edges:
+            bn.add_edge(edge)
+        bn.del_var(variable)
 
     def check_edges_del_var(self, var):
         bay = BayesNet()
@@ -122,29 +179,38 @@ class BNReasoner:
         cpt1 = cpt1.merge(cpt2,left_on=common_vars,right_on=common_vars)
         cpt1['p']= cpt1['p_x']*cpt1['p_y']
         cpt1 = cpt1.drop(['p_x','p_y'],axis=1)
+        print(cpt1)
         return cpt1
 
     def summing_out(self, cpt , variable):
         #als andere variabellen gelijk zijn in cpt moeten deze vermenigvuldigd worden
+
         cpt = cpt.drop([variable],axis=1)
         variables_left = [var for var in cpt.columns if var != variable and var != 'p']
         cpt = cpt.groupby(variables_left).agg({'p': 'sum'})
         cpt.reset_index(inplace=True)
         return cpt
 
-    def variable_elimination(self,cpt):
-        order = self.MinFillOrder(cpt.columns[:-2])
+    def variable_elimination(self,cpt,order):
         length = len(cpt.columns)
-        if length == 2:
+        newbn = BayesNet()
+        newbn.load_from_bifxml(self.net)
+        if length == 2 or length == len(self.variables)+1:
             return cpt
-        order1 = cpt.columns[:-2]
+        if order == 'standard':
+            order1 = cpt.columns[:-2]
+        elif order == 'degree':
+            order1 = self.MinDegreeOrder(cpt.columns[:-2], [],newbn)
+        elif order == 'fill':
+            order1 = self.MinFillOrder(cpt.columns[:-2], [],newbn)
+
+
         for i in order1:
             cpt_next = self.bn.get_cpt(i)
             cpt = self.multiply_cpt(cpt_next, cpt)
-            print(cpt)
             cpt = self.summing_out(cpt,i)
 
-        return self.variable_elimination(cpt)
+        return self.variable_elimination(cpt, order)
 
     def updating_cpt(self,variable,value):
         cpt = self.bn.get_cpt(variable)
@@ -157,7 +223,6 @@ class BNReasoner:
                 if i:
                     cpt = cpt.drop(j)
             j += 1
-        print('cpt=',variable,cpt)
         cpt = cpt.reset_index(drop=True)
         return cpt
 
@@ -187,7 +252,8 @@ class BNReasoner:
 
 
 
-    def marginal_distribution(self,variables,evidence):
+    def marginal_distribution(self,variables,evidence,order):
+        cpts = []
         if evidence:
 
             for e in evidence:
@@ -195,10 +261,10 @@ class BNReasoner:
                 value = evidence[e]
                 cpt = self.updating_cpt(variable,value)
                 self.bn.update_cpt(variable,cpt)
-        cpts = []
         for i in variables:
             cpt = self.bn.get_cpt(i)
-            cpts.append(self.variable_elimination(cpt))
+            cpts.append(self.variable_elimination(cpt,order))
+
 
         cpt1 = cpts[0]
         for i in cpts[1:]:
@@ -226,8 +292,8 @@ class BNReasoner:
 
         return cpt1
 
-    def mainfunction(self,variables,evidence):
-        cpt = self.marginal_distribution(variables,evidence)
+    def mainfunction(self,variables,evidence,order):
+        cpt = self.marginal_distribution(variables,evidence,order)
         normalisation_factor = self.normalisation_by_one(cpt)
         for i in cpt['p']:
             cpt = cpt.replace(i, i/normalisation_factor)
@@ -251,22 +317,52 @@ class BNReasoner:
 
     ''' MPE '''
 
-    def MPE(self,variables,evidence):
-        evidence = {}
-        maxrow = self.MAP(variables,evidence)
+    def MPE(self,variables,evidence,order):
+        cpt = self.mainfunction(self.variables,evidence,order)
+        max = cpt['p'].max()
+        maxrow = cpt.loc[cpt['p'] == max]
         return maxrow
 
+    def J_P_D(self, variables, evidence):
+        if evidence:
+
+            for e in evidence:
+                variable = e
+                value = evidence[e]
+                cpt = self.updating_cpt(variable,value)
+                self.bn.update_cpt(variable,cpt)
+        cpt = bayes.bn.get_cpt(variables[0])
+        for i in variables[1:]:
+            cpt = bayes.multiply_cpt(cpt, bayes.bn.get_cpt(i))
+        cpt = self.marginal_distribution(variables, evidence)
+        max = cpt['p'].max()
+        maxrow = cpt.loc[cpt['p'] == max]
+        return maxrow
 
 # !! self.bn.get_interaction_graph() = self.bn.get_digraph()
 
 if __name__ == "__main__":
     bayes = BNReasoner('testing/corona_example.BIFXML')
-    #bayes = BNReasoner('testing/b500-31.xml')
+    # bayes = BNReasoner('testing/b40-51.xml')
+    total = []
     #bayes.node_pruning('node100', [('node203', True), ('node333', False), ('node1', False), ('node33', False), ('node400', False)])
     #bayes.d_sep('node5', 'node30', ['node22', 'node2'])
-    print(bayes.mainfunction(['Corona?'], {'Winter?': True, 'Senior?': True, 'Symptoms?': False, 'Obesitas?': False}))
-    # print(bayes.marginal_distribution(['Obesitas?'],{}))
-    #print (bayes.marginal_distribution(['node22'],{'node333': False}))
-    #print(bayes.node_pruning(['node22'],{'node333': False}))
+    for i in range(1):
+        start = time.time()
+        print(bayes.MPE([], {'Winter?': True, 'Symptoms?': True, 'Senior?': True}, 'fill'))
+
+        # print(bayes.mainfunction(['Corona?'], {'Obesitas?': True, 'Lockdown?': True, 'Disease?': True, 'Symptoms?': True, 'Senior?': True, 'Reproduction Number Below One?': False, 'Positive Selftest?': True}, 'fill'))
+        # print(bayes.J_P_D(bayes.variables, {}))
+        end = time.time()
+        tijd = round(((end - start) * 1000),4)
+        total.append(tijd)
+        # print(bayes.marginal_distribution(['Obesitas?'],{}))
+        #print (bayes.marginal_distribution(['node22'],{'node333': False}))
+        #print(bayes.node_pruning(['node22'],{'node333': False}))
+
+    print(total)
+    print('avg:',np.mean(total))
+    print('std:',np.std(total))
+
 
 
