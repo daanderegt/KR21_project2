@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2700381b-7d8f-41b1-97fd-3947addcb331" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Jonna/BNReasoner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Jonna/BNReasoner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KR21_Daan/BNReasonerPleuntje.py" beforeDir="false" afterPath="$PROJECT_DIR$/KR21_Daan/BNReasonerPleuntje.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KR21_Daan/bntest.py" beforeDir="false" afterPath="$PROJECT_DIR$/KR21_Daan/bntest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/KR21_project2.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/BNReasoner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/BNReasonerChantal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/BNReasonerEvidence.py" beforeDir="false" afterPath="$PROJECT_DIR$/BNReasoner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/BayesNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/BayesNet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/Jonna.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/test" beforeDir="false" afterPath="$PROJECT_DIR$/test" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/b40-51.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testing/b40-51.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/b500-31.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testing/b500-31.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/corona_example.BIFXML" beforeDir="false" afterPath="$PROJECT_DIR$/testing/corona_example.BIFXML" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/dog_problem.BIFXML" beforeDir="false" afterPath="$PROJECT_DIR$/testing/dog_problem.BIFXML" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/lecture_example.BIFXML" beforeDir="false" afterPath="$PROJECT_DIR$/testing/lecture_example.BIFXML" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Jonna/testing/lecture_example2.BIFXML" beforeDir="false" afterPath="$PROJECT_DIR$/testing/lecture_example2.BIFXML" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/KR21_project2.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/BNReasoner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/BNReasonerChantal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/BNReasonerPleuntje.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/BayesNet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/bntest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/test" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/testing/dog_problem.BIFXML" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/testing/lecture_example.BIFXML" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KR21_Daan/testing/lecture_example2.BIFXML" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +73,12 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.BNReasoner (1)">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Chantal\Documents\ARTIFICIAL INTELLIGENCE\2. Knowledge Representation\KR assignment 2\KR21_project2" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.BNReasoner">
     <configuration name="BNReasoner (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="KR21_project2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -48,6 +92,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Jonna/BNReasoner.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BNReasoner (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="KR21_project2" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/KR21_Daan" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/KR21_Daan/BNReasoner.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -77,7 +142,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="BNReasonerPleuntje" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="BayesNet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="KR21_project2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -85,11 +150,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/KR21_Daan" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Jonna" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/KR21_Daan/BNReasonerPleuntje.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Jonna/BayesNet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -98,36 +163,33 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="bntest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest in C:/Users/Chantal/Documents/ARTIFICIAL INTELLIGENCE/2. Knowledge Representation/KR assignment 2/KR21_project2/Jonna/testing" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="KR21_project2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/KR21_Daan" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Jonna/testing" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/KR21_Daan/bntest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/Jonna/testing&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.BNReasoner (1)" />
-        <item itemvalue="Python.bntest" />
-        <item itemvalue="Python.BNReasonerPleuntje" />
         <item itemvalue="Python.BNReasoner" />
+        <item itemvalue="Python.BNReasoner (1)" />
+        <item itemvalue="Python.BayesNet" />
+        <item itemvalue="Python tests.pytest in C:/Users/Chantal/Documents/ARTIFICIAL INTELLIGENCE/2. Knowledge Representation/KR assignment 2/KR21_project2/Jonna/testing" />
+        <item itemvalue="Python.BNReasoner (2)" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -141,50 +203,16 @@
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="543" y="214" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1638524583452">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="543" y="214" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1638524583452" />
-    <state x="228" y="306" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1638882076989">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="228" y="306" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.0.1536.824@0.0.1536.824" timestamp="1638882076989" />
-    <state width="1515" height="304" key="GridCell.Tab.0.bottom" timestamp="1639224516597">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="304" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1639224516597" />
-    <state width="1515" height="304" key="GridCell.Tab.0.center" timestamp="1639224516597">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="304" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1639224516597" />
-    <state width="1515" height="304" key="GridCell.Tab.0.left" timestamp="1639224516596">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="304" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1639224516596" />
-    <state width="1515" height="304" key="GridCell.Tab.0.right" timestamp="1639224516597">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="304" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1639224516597" />
-    <state width="1515" height="195" key="GridCell.Tab.1.bottom" timestamp="1639151439319">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="195" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1639151439319" />
-    <state width="1515" height="195" key="GridCell.Tab.1.center" timestamp="1639151439319">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="195" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1639151439319" />
-    <state width="1515" height="195" key="GridCell.Tab.1.left" timestamp="1639151439318">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="195" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1639151439318" />
-    <state width="1515" height="195" key="GridCell.Tab.1.right" timestamp="1639151439319">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1515" height="195" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1639151439319" />
-    <state x="277" y="57" key="SettingsEditor" timestamp="1638894437154">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1638894437154" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
