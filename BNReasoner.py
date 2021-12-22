@@ -25,13 +25,15 @@ class BNReasoner:
         self.variables= self.bn.get_all_variables()
         self.net = net
 
-    def d_sep(self,var1,var2,given3):
+    def d_sep(self, var1, var2, given3):
         graph = self.bn.get_interaction_graph()
-        for node in given3: 
+        for node in given3:
             graph.remove_node(node)
-        
+
         try:
-            graph.subgraph(nx.shortest_path(graph.to_undirected(), var1, var2))
+            for node1 in var1:
+                for node2 in var2:
+                    graph.subgraph(nx.shortest_path(graph.to_undirected(), node1, node2))
             return False
         except:
             return True
@@ -280,13 +282,12 @@ class BNReasoner:
         return MPE
 
 if __name__ == "__main__":
-    bayes = BNReasoner('testing/corona_example.BIFXML')
+    bayes = BNReasoner('testing/lecture_example.BIFXML')
     total = []
     for i in range(1):
         start = time.time()
         print(bayes.MPE({'Winter?': True, 'Symptoms?': True, 'Senior?': True}, 'degree'))
         print(bayes.MAP(['Corona?'], {'Winter?': True, 'Symptoms?': True, 'Senior?': True}, 'standard'))
-
         end = time.time()
         count_time = round(((end - start) * 1000),4)
         total.append(count_time)
